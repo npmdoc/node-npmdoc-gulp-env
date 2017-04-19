@@ -1,0 +1,198 @@
+<div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a
+
+        href="https://github.com/crystalschang/gulp-env"
+
+    >gulp-env (v0.4.0)</a>
+</h1>
+<h4>Add env vars to your process.env</h4>
+<div class="apidocSectionDiv"><a
+    href="#apidoc.tableOfContents"
+    id="apidoc.tableOfContents"
+><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.gulp-env">module gulp-env</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-env.gulp-env">
+            function <span class="apidocSignatureSpan"></span>gulp-env
+            <span class="apidocSignatureSpan">(options)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.gulp-env.set">
+            function <span class="apidocSignatureSpan">gulp-env.</span>set
+            <span class="apidocSignatureSpan">(vars)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.gulp-env" id="apidoc.module.gulp-env">module gulp-env</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-env.gulp-env" id="apidoc.element.gulp-env.gulp-env">
+        function <span class="apidocSignatureSpan"></span>gulp-env
+        <span class="apidocSignatureSpan">(options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function env(options) {
+  var vars = {};
+  var added = false;
+
+  if (typeof options !== &#x27;object&#x27;) {
+    options = {file: options + &#x27;&#x27;};
+  }
+
+  if (options.file) {
+    var file = path.resolve(options.file);
+    var type = options.type || path.extname(file);
+
+    if (type &#x26;&#x26; type[0] !== &#x27;.&#x27;) {
+      type = &#x27;.&#x27; + type;
+    }
+
+    var handler = null;
+
+    if (options.handler) {
+      handler = bind(options.handler);
+    } else if (!type) {
+      handler = require;
+    } else if (types[type]) {
+      handler = bind(types[type]);
+    } else if (exts[type]) {
+      handler = require;
+    } else {
+      throw new TypeError(&#x27;gulp-env: Unknown type: &#x27; + type);
+    }
+
+    extend(vars, handler(file));
+    added = true;
+  }
+
+  if (options.vars) {
+    if (vars == null) {
+      extend(vars, options.vars);
+    } else {
+      extend(vars, options.vars);
+    }
+    added = true;
+  }
+
+  return set(added ? vars : null);
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.gulp-env.set" id="apidoc.element.gulp-env.set">
+        function <span class="apidocSignatureSpan">gulp-env.</span>set
+        <span class="apidocSignatureSpan">(vars)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function set(vars) {
+  var ret = through2.obj();
+
+  if (vars != null) {
+    var old = makeOld(vars);
+    extend(process.env, vars);
+    var restore = ret.restore = restoreOld.bind(null, vars, old);
+
+    ret.reset = through2.obj(noopPipe, once(restore));
+    ret.reset.force = through2.obj(noopPipe, once(restore.bind(null, true)));
+  }
+
+  return ret;
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+========
+
+Add or modify variables in your `process.env`.
+
+Purpose
+========
+
+Often, two processes running at the same time need different environmental variables (for example: running tests and a server from
+ the same gulp process). `gulp-env` helps simplify that problem, by letting you establish your env vars whenever you&#x27;d like
+, in a simpler interface. You can set values from an external `.json`, `.ini`, or other file, or programmatically set them directly
+ by using `env({vars:{}})` or `env.<span class="apidocCodeKeywordSpan">set</span>(vars)`.
+
+Install
+========
+
+```
+npm i --save-dev gulp-env
+```
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
